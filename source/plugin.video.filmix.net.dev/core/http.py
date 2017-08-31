@@ -189,10 +189,9 @@ class HttpData:
             args = [iter(iterable)] * n
             return izip_longest(fillvalue=fillvalue, *args)
 
-        _ = encoded_url.strip('#')
-        func = lambda items: '\u0'+''.join(items)
-        l = map(func, grouper(3, _))
-        return ''.join(l).decode('unicode_escape')
+        _ = (encoded_url[1:] if encoded_url.find('#') != -1 else encoded_url)
+        tokens = map(lambda items: '\u0'+''.join(items), grouper(3, _))
+        return ''.join(tokens).decode('unicode_escape')
 
     def decode_direct_media_url(self, encoded_url, checkhttp=False):
         if(checkhttp == True and (encoded_url.find('http://') != -1 or encoded_url.find('https://') != -1)):
