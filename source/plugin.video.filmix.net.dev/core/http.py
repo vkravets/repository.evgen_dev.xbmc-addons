@@ -459,7 +459,7 @@ class HttpData:
         html = html.encode('utf-8')
         soup = xbmcup.parser.html(self.strip_scripts(html))
 
-        link = self.decode_direct_media_url(soup.find('input', id='video-link').get('value'))
+        link = self.decode_direct_media_url(soup.find('input', id='video5-link').get('value'))
         avail_quality = max(map(self.my_int, self.get_qualitys(link)))
         progress.update(100)
         progress.close()
