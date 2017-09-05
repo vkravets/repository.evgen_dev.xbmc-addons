@@ -186,19 +186,33 @@ class BookmarkList(AbstactList):
         except:
             page = 0
 
+        try:
+            category = params['category']
+        except:
+            category = False
+
         if(xbmcup.app.setting['is_logged'] == 'false'):
             xbmcup.gui.message(xbmcup.app.lang[30149].encode('utf-8'))
             return False
 
-        self.show_movies(url, page)
+        if not category:
+            self.item(' - '+xbmcup.app.lang[30114], self.link('bookmarks', {'category' : 'films'}),       folder=True, cover=cover.treetv)
+            self.item(' - '+xbmcup.app.lang[30115], self.link('bookmarks', {'category' : 'serials'}),     folder=True, cover=cover.treetv)
+            self.item(' - '+xbmcup.app.lang[30116], self.link('bookmarks', {'category' : 'mults'}),   folder=True, cover=cover.treetv)
+        else:
+            self.show_movies(url, page, category)
+
         self._variables['is_item'] = False
         self.render(cache=False)
 
 
-    def show_movies(self, url, page):
+    def show_movies(self, url, page, category=False):
         params = {}
         params['url'] = url
         url = 'favorites'
+        if category:
+            url += '/' + category
+            params['category'] = category
         md5 = hashlib.md5()
         md5.update(url+'?v='+xbmcup.app.addon['version'])
         response = CACHE(str(md5.hexdigest()), self.get_movies, url, page, 'dle-content', True)
